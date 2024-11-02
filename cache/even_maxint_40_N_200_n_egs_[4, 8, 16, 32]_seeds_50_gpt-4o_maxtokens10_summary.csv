@@ -1,8 +1,8 @@
 label,n_egs,correct
 False,4,0.88
 False,8,0.88
-False,16,0.98
-False,32,0.88
+False,16,0.96
+False,32,0.86
 True,4,0.9
 True,8,0.92
 True,16,1.0

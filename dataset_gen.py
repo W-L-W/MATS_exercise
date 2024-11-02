@@ -1,6 +1,8 @@
 import random as r
 import dataset as ds
 
+RULES = ["even", "odd", "div3", "not_div3", "prime", "not_prime"]
+
 
 def generate_eqn_true(seed: int, max_int: int = 100):
     r.seed(seed)

@@ -102,6 +102,7 @@ def evaluate_num_rule_mcq(
     )
     out_dicts = []
     for n_egs in n_eg_options:
+        print("Moving to n_egs:", n_egs)
         for seed in range(num_seeds):
             msgs = generate_mcq_prompt_messages(dataset, n_egs, seed)
             response = ou.call_api(
@@ -118,7 +119,13 @@ def evaluate_num_rule_mcq(
         json.dump(out_dicts, f)
 
     # later want to return and test out summary statistic getting
-    return out_dicts
+    df = pd.DataFrame(out_dicts)
+    df["correct"] = df["choice"] == rule
+    summary = df.groupby("n_egs")["correct"].mean()
+    summary_out_file = f"{rule}_n_egs_{n_eg_options}_seeds_{num_seeds}_{model}_maxtokens{max_tokens}_summary.csv"
+    summary.to_csv("cache/mcq/" + summary_out_file)
+
+    return out_dicts, summary
 
 
 if __name__ == "__main__":
