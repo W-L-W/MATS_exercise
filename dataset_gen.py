@@ -79,8 +79,8 @@ def get_number_rule_dataset(
         primes = calculate_primes_up_to(max_int)
         non_primes = [n for n in range(max_int) if n not in primes]
         # subsample N_total_of each
-        prime_samples = r.choices(primes, N_total_each)
-        non_prime_samples = r.choices(non_primes, N_total_each)
+        prime_samples = r.choices(primes, k=N_total_each)
+        non_prime_samples = r.choices(non_primes, k=N_total_each)
 
         if rule == "prime":
             dataset = ds.Dataset(desc, prime_samples, non_prime_samples)

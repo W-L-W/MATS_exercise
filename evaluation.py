@@ -4,6 +4,7 @@ import pandas as pd
 
 import dataset as ds
 import oai_utils as ou
+import dataset_gen as dg
 
 
 def evaluate_tf_completion(
@@ -55,6 +56,58 @@ def evaluate_tf_completion(
     sum_stats.to_csv("cache/" + summary_out_file)
 
     return out_dicts, sum_stats
+
+
+# specifically for the numerical rules defined in dataset_gen.py
+NUM_CHOICE_SYSTEM_PROMPT = """
+You are a helpful AI assistant that solves simple maths problems.
+The user will give you a set of pairs of (number, boolean)
+where the boolean is True when the number satisfies a certain simple rule.
+
+The rule can take one of the following options:
+- even: the number is even
+- odd: the number is odd
+- div3: the number is divisible by 3
+- not_div3: the number is not divisible by 3
+- prime: the number is prime
+- not_prime: the number is not prime
+"""
+
+
+def generate_mcq_prompt_messages(
+    dataset: ds.Dataset, n_egs: int, seed: int
+) -> ou.OAI_MSGS:
+    """Generate messages to send to api for MCQ on dataset"""
+    user_body = dataset.generate_example_body
+
+
+def evaluate_num_rule_mcq(
+    rule: str,
+    n_eg_options: List[int],
+    num_seeds: int,
+    model: str = "gpt-4o-mini",
+    max_tokens: int = 1,
+    json_format: bool = True,
+):
+    """Use MCQ format to see how good choosing between different options"""
+    dataset = dg.get_number_rule_dataset(
+        rule=rule, N_total_each=200, seed=0, max_int=40
+    )
+    response_format = ou.NUM_MCQ_RESPONSE_FORMAT if json_format else None
+    extractor = {
+        (ou.extract_mcq_choice_from_completion_json_format if json_format else None)
+    }
+    out_dicts = []
+    for n_egs in n_eg_options:
+        for seed in range(num_seeds):
+            prompt = dataset.generate_mcq_prompt(n_egs, seed)
+            response = ou.call_api(
+                tm_dict, seed, model, max_tokens, response_format=response_format
+            )
+            choice = extractor(response)
+            out_dict = {"seed": seed, "n_egs": n_egs, "choice": choice}
+            out_dicts.append(out_dict)
+    pass
 
 
 if __name__ == "__main__":
