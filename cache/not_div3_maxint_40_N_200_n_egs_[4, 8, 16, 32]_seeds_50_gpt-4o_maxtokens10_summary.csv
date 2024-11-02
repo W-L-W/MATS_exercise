@@ -1,0 +1,9 @@
+label,n_egs,correct
+False,4,0.66
+False,8,0.62
+False,16,0.6
+False,32,0.5
+True,4,0.6
+True,8,0.58
+True,16,0.88
+True,32,0.94
