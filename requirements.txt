@@ -1,3 +1,6 @@
 matplotlib
 pandas
 openai
+
+# for vscode report export
+nbconvert

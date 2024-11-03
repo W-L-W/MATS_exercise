@@ -96,6 +96,8 @@ def get_number_rule_dataset(
     dataset.save()
     return dataset
 
+def load_number_rule_dataset(N_total_each: int, max_int: int = 100, rule: str = "even"):
+    return ds.Dataset.load(f"{rule}_maxint_{max_int}_N_{N_total_each}")
 
 if __name__ == "__main__":
     pass

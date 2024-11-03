@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # _ = initial_rule_testing(args.rule)
     #
-    for rule in dg.RULES:
+    for rule in dg.RULES[1:]:
         print("Now testing rule:", rule)
         mcq_rule_testing(rule)
 
